@@ -39,6 +39,7 @@ async def get_server_ip(ctx: SlashContext) -> None:
 @slash_command("server_status", description="Check status of different Jysses services")
 async def get_server_status(ctx: SlashContext) -> None:
     results: dict = {}
+    await ctx.defer()
     for k, name in SERVICE_NAME.items():
         results[k] = check_port(SERVICE_PORT[k])
 

@@ -9,16 +9,34 @@ HOSTNAME: str = "host.docker.internal"
 class JyssesService:
     Jellyfin = 0
     Audiobookshelf = 1
+    Radarr = 2
+    Sonarr = 3
+    Prowlarr = 4
+    Sabnzbd = 5
+    Jellyseerr = 6
+    Bazarr = 7
 
 
 SERVICE_PORT: dict = {
     JyssesService.Jellyfin: 8096,
     JyssesService.Audiobookshelf: 13378,
+    JyssesService.Radarr: 7878,
+    JyssesService.Sonarr: 8989,
+    JyssesService.Prowlarr: 9696,
+    JyssesService.Sabnzbd: 8080,
+    JyssesService.Jellyseerr: 5055,
+    JyssesService.Bazarr: 6767
 }
 
 SERVICE_NAME: dict = {
     JyssesService.Jellyfin: "Jellyfin",
-    JyssesService.Audiobookshelf: "Audiobookshelf"
+    JyssesService.Audiobookshelf: "Audiobookshelf",
+    JyssesService.Radarr: "Radarr",
+    JyssesService.Sonarr: "Sonarr",
+    JyssesService.Prowlarr: "Prowlarr",
+    JyssesService.Sabnzbd: "sabnzbd",
+    JyssesService.Jellyseerr: "Jellyseerr",
+    JyssesService.Bazarr: "Bazarr"
 }
 
 bot = Client(intents=Intents.DEFAULT)
@@ -45,7 +63,7 @@ async def get_server_status(ctx: SlashContext) -> None:
 
     msg: str = ""
     for k, v in results.items():
-        msg += f"{SERVICE_NAME[k]}: {'UP' if v else 'DOWN'}"
+        msg += f"{SERVICE_NAME[k]}: {':green_circle:' if v else ':red_circle:'}\n"
 
     await ctx.send(msg)
 

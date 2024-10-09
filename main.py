@@ -61,7 +61,7 @@ async def get_server_status(ctx: SlashContext) -> None:
     for k, name in SERVICE_NAME.items():
         results[k] = check_port(SERVICE_PORT[k])
 
-    msg: str = ""
+    msg: str = "**STATUS**:\n"
     for k, v in results.items():
         msg += f"{SERVICE_NAME[k]}: {':green_circle:' if v else ':red_circle:'}\n"
 

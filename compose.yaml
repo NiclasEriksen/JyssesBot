@@ -15,3 +15,4 @@ services:
       DISCORD_TOKEN: ${DISCORD_TOKEN}
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    restart: always

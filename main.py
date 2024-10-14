@@ -15,6 +15,7 @@ class JyssesService:
     Sabnzbd = 5
     Jellyseerr = 6
     Bazarr = 7
+    JFAGo = 8
 
 
 SERVICE_PORT: dict = {
@@ -25,7 +26,8 @@ SERVICE_PORT: dict = {
     JyssesService.Prowlarr: 9696,
     JyssesService.Sabnzbd: 8080,
     JyssesService.Jellyseerr: 5055,
-    JyssesService.Bazarr: 6767
+    JyssesService.Bazarr: 6767,
+    JyssesService.JFAGo: 8056
 }
 
 SERVICE_NAME: dict = {
@@ -36,7 +38,8 @@ SERVICE_NAME: dict = {
     JyssesService.Prowlarr: "Prowlarr",
     JyssesService.Sabnzbd: "sabnzbd",
     JyssesService.Jellyseerr: "Jellyseerr",
-    JyssesService.Bazarr: "Bazarr"
+    JyssesService.Bazarr: "Bazarr",
+    JyssesService.JFAGo: "JFA-Go"
 }
 
 bot = Client(intents=Intents.DEFAULT)

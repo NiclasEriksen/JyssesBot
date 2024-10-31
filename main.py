@@ -1,7 +1,7 @@
 import socket
 import requests
 import os
-from interactions import slash_command, SlashContext, Client, Intents, listen
+from interactions import slash_command, SlashContext, Client, Intents, listen, File
 from six import BytesIO
 
 import trusetekst
@@ -84,10 +84,9 @@ async def generate_trusetext(ctx: SlashContext) -> None:
     img_binary = BytesIO()
     img.save(img_binary, "PNG")
     img_binary.seek(0)
-    f = img_binary
 
     await ctx.channel.send(
-        "", files=[f]
+        "", files=[File(img_binary, file_name="truse.png")]
     )
     f.close()
 

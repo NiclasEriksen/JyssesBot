@@ -3,7 +3,7 @@ import socket
 import interactions
 import requests
 import os
-from interactions import slash_command, SlashContext, Client, Intents, listen, File
+from interactions import slash_command, SlashContext, Client, Intents, listen, File, slash_str_option, OptionType
 from io import BytesIO
 
 import trusetekst
@@ -78,9 +78,13 @@ async def get_server_status(ctx: SlashContext) -> None:
 
 
 @slash_command("trusetext", description="Trusetekst, du vet.")
-async def generate_trusetext(ctx: SlashContext) -> None:
+@slash_str_option(
+    name="text",
+    description="Teksten som skal vises"
+)
+async def generate_trusetext(ctx: SlashContext, text: str) -> None:
     img = trusetekst.get_trusetext(
-        "", trusetekst.fonts["Truckin"], 32, trusetekst.COLORS["red"], trusetekst.V_ALIGN_BOTTOM, trusetekst.H_ALIGN_CENTER
+        text, trusetekst.fonts["Truckin"], 32, trusetekst.COLORS["red"], trusetekst.V_ALIGN_BOTTOM, trusetekst.H_ALIGN_CENTER
     )
     f = None
 

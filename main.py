@@ -2,6 +2,9 @@ import socket
 import requests
 import os
 from interactions import slash_command, SlashContext, Client, Intents, listen
+from six import BytesIO
+
+import trusetekst
 
 HOSTNAME: str = "host.docker.internal"
 
@@ -71,6 +74,23 @@ async def get_server_status(ctx: SlashContext) -> None:
     await ctx.send(msg)
 
 
+@slash_command("trusetext", description="Trusetekst, du vet.")
+async def generate_trusetext(ctx: SlashContext) -> None:
+    img = trusetekst.get_trusetext(
+        "", trusetekst.fonts["Truckin"], 32, trusetekst.COLORS["red"], trusetekst.V_ALIGN_BOTTOM, trusetekst.H_ALIGN_CENTER
+    )
+    f = None
+
+    with BytesIO() as img_binary:
+        img.save(img_binary, "PNG")
+        img_binary.seek(0)
+        f = img_binary
+
+    await ctx.channel.send(
+        "", files=[f]
+    )
+
+
 def check_port(port: int) -> bool:
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.settimeout(2)
@@ -89,3 +109,5 @@ if __name__ == "__main__":
     TOKEN = os.getenv("DISCORD_TOKEN", "")
     if TOKEN != "":
         bot.start(TOKEN)
+
+

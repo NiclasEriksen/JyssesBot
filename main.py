@@ -1,10 +1,13 @@
 import socket
+
+import interactions
 import requests
 import os
 from interactions import slash_command, SlashContext, Client, Intents, listen, File
-from six import BytesIO
+from io import BytesIO
 
 import trusetekst
+from trusetekst import TRUSE_PATH
 
 HOSTNAME: str = "host.docker.internal"
 
@@ -85,10 +88,11 @@ async def generate_trusetext(ctx: SlashContext) -> None:
     img.save(img_binary, "PNG")
     img_binary.seek(0)
 
-    await ctx.channel.send(
-        "", files=[File(img_binary, file_name="truse.png")]
+    # with open(TRUSE_PATH, "r") as f:
+    await ctx.send(
+        "", file=File(TRUSE_PATH, file_name="truse.png")
     )
-    f.close()
+    # f.close()
 
 
 def check_port(port: int) -> bool:
@@ -109,5 +113,4 @@ if __name__ == "__main__":
     TOKEN = os.getenv("DISCORD_TOKEN", "")
     if TOKEN != "":
         bot.start(TOKEN)
-
 

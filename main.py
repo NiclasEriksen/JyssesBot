@@ -85,12 +85,11 @@ async def generate_trusetext(ctx: SlashContext) -> None:
     f = None
 
     img_binary = BytesIO()
-    img.save(img_binary, "PNG")
-    img_binary.seek(0)
+    img.save(img_binary, format="PNG")
 
     # with open(TRUSE_PATH, "r") as f:
     await ctx.send(
-        "", file=File(TRUSE_PATH, file_name="truse.png")
+        "", file=File(img_binary, file_name="truse.png")
     )
     # f.close()
 

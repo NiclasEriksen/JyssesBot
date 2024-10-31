@@ -81,14 +81,15 @@ async def generate_trusetext(ctx: SlashContext) -> None:
     )
     f = None
 
-    with BytesIO() as img_binary:
-        img.save(img_binary, "PNG")
-        img_binary.seek(0)
-        f = img_binary
+    img_binary = BytesIO()
+    img.save(img_binary, "PNG")
+    img_binary.seek(0)
+    f = img_binary
 
     await ctx.channel.send(
         "", files=[f]
     )
+    f.close()
 
 
 def check_port(port: int) -> bool:

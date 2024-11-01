@@ -2,9 +2,6 @@ import socket
 import discord
 import requests
 import os
-from io import BytesIO
-
-import trusetekst
 from views import TrusetextView
 
 HOSTNAME: str = "host.docker.internal"

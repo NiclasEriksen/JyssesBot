@@ -1,9 +1,5 @@
-from cProfile import label
 from io import BytesIO
-
 import discord.ui
-from discord import InputText
-
 import trusetekst
 from trusetekst import H_ALIGN_LEFT, H_ALIGN_CENTER, H_ALIGN_RIGHT, V_ALIGN_TOP, V_ALIGN_CENTER, V_ALIGN_BOTTOM
 
@@ -106,7 +102,6 @@ class TrusetextView(discord.ui.View):
         await self.generate_image()
         await interaction.response.edit_message(view=None, delete_after=0)
         await interaction.respond("", files=[discord.File(self.img_binary, filename="truse.png")])
-        # await interaction.edit_original_response(content="", delete_after=0)
 
 
     @discord.ui.button(label="Left", row=3, style=discord.ButtonStyle.secondary)

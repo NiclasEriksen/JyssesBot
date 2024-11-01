@@ -1,8 +1,7 @@
 import os
 from typing import Union
-from venv import create
 
-from PIL import Image, ImageDraw, ImageFont, ImageFilter
+from PIL import Image, ImageDraw, ImageFont
 from pil_autowrap.pil_autowrap import wrap_text
 
 BASE_PATH: str = os.path.dirname(os.path.realpath(__file__))
@@ -59,16 +58,11 @@ def add_text(
     font_fp = fonts[font] if fonts[font] else fonts[FONT_DEFAULT]
     font_obj = ImageFont.truetype(font_fp, size)
     fg_img = Image.new("RGBA", img.size)
-    # bg_img = Image.new("RGBA", img.size)
     fg_img_draw = ImageDraw.Draw(fg_img)
-    # bg_img_draw = ImageDraw.Draw(bg_img)
 
     _, _, w, h = fg_img_draw.textbbox((0, 0), text, font=font_obj, stroke_width=2)
     if img.size[0] < w:
         text = wrap_text(font_obj, text, img.size[0])
-        # factor = img.size[0] / w
-        # split_pos = int(len(text) * factor)
-        # text = text[:split_pos] + "\n" + text[split_pos:]
         _, _, w, h = fg_img_draw.textbbox((0, 0), text, font=font_obj, stroke_width=2)
 
     v_center: float = img.size[1] / 2.0
@@ -121,6 +115,6 @@ def get_trusetext(
     )
 
 if __name__ == "__main__":
-    img = create_img()
-    img = add_text(img, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pretium placerat gravida. Integer eu pulvinar magna. Aliquam cursus nisl sed malesuada rutrum.", v_align=V_ALIGN_BOTTOM, h_align=H_ALIGN_CENTER)
-    img.show()
+    i = create_img()
+    i = add_text(i, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pretium placerat gravida. Integer eu pulvinar magna. Aliquam cursus nisl sed malesuada rutrum.", v_align=V_ALIGN_BOTTOM, h_align=H_ALIGN_CENTER)
+    i.show()

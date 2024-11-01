@@ -19,7 +19,10 @@ COLORS: dict = dict(
     white   = "#FFFFFF",
     black   = "#000000",
     pink    = "#ff6b9b",
-    blue    = "#0064f8"
+    blue    = "#0064f8",
+    olive   = "#72ba37",
+    orange  = "#ff6713",
+    cyan    = "#00fff7",
 )
 
 
@@ -27,16 +30,18 @@ class Fonts:
     Runescape: tuple = ("Runescape", os.path.join(FONT_PATH, "runescape_uf.ttf"))
     Truckin: tuple = ("Truckin", os.path.join(FONT_PATH, "truckin.ttf"))
     Roboto: tuple = ("Roboto", os.path.join(FONT_PATH, "Roboto-Medium.ttf"))
+    Girly: tuple = ("Girly", os.path.join(FONT_PATH, "Loverine.otf"))
+    Porky: tuple = ("Porky", os.path.join(FONT_PATH, "PORKYS_.TTF"))
 
     def __init__(self):
-        self._fonts: dict = {k: v for (k, v) in [self.Runescape, self.Truckin, self.Roboto]}
+        self._fonts: dict = {k: v for (k, v) in [self.Runescape, self.Truckin, self.Roboto, self.Girly, self.Porky]}
 
     @property
     def font_list(self) -> list:
         return list(self._fonts.keys())
 
     def __getitem__(self, key: str) -> Union[str, None]:
-        if key in self._fonts:
+        if key in self._fonts.keys():
             return self._fonts[key]
         return None
 
@@ -53,16 +58,16 @@ def add_text(
     font_fp = fonts[font] if fonts[font] else fonts[FONT_DEFAULT]
     font_obj = ImageFont.truetype(font_fp, size)
     fg_img = Image.new("RGBA", img.size)
-    bg_img = Image.new("RGBA", img.size)
+    # bg_img = Image.new("RGBA", img.size)
     fg_img_draw = ImageDraw.Draw(fg_img)
-    bg_img_draw = ImageDraw.Draw(bg_img)
+    # bg_img_draw = ImageDraw.Draw(bg_img)
 
-    _, _, w, h = fg_img_draw.textbbox((0, 0), text, font=font_obj)
+    _, _, w, h = fg_img_draw.textbbox((0, 0), text, font=font_obj, stroke_width=2)
     if img.size[0] < w:
         factor = img.size[0] / w
         split_pos = int(len(text) * factor)
         text = text[:split_pos] + "\n" + text[split_pos:]
-        _, _, w, h = fg_img_draw.textbbox((0, 0), text, font=font_obj)
+        _, _, w, h = fg_img_draw.textbbox((0, 0), text, font=font_obj, stroke_width=2)
 
     v_center: float = img.size[1] / 2.0
     h_center: float = img.size[0] / 2.0
@@ -90,12 +95,8 @@ def add_text(
         pos = (pos_x, pos_y)
 
 
-    bg_img_draw.text(pos, text, font=font_obj, fill=(0, 0, 0), align=t_align)
-    bg_img = bg_img.filter(ImageFilter.BoxBlur(2))
-    fg_img_draw.text(pos, text, font=font_obj, fill=color_h, align=t_align)
-    bg_img.paste(bg_img, (0, 0), bg_img)
-    bg_img.paste(fg_img, (0, 0), fg_img)
-    img.paste(bg_img, (0, 0), bg_img)
+    fg_img_draw.text(pos, text, font=font_obj, fill=color_h, align=t_align, stroke_width=2, stroke_fill=(255, 255, 255) if color_h == COLORS["black"] else (0, 0, 0))
+    img.paste(fg_img, (0, 0), fg_img)
 
     return img
 
@@ -112,9 +113,9 @@ def get_trusetext(
         return create_img()
 
     img = create_img()
-    return img.add_text(
+    return add_text(
         img, text,
-        font=font, size=size, color=color, v_align=v_align, h_align=h_align
+        font=font, size=size, color_h=color, v_align=v_align, h_align=h_align
     )
 
 if __name__ == "__main__":

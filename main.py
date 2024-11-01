@@ -1,13 +1,11 @@
 import socket
-
-import interactions
+import discord
 import requests
 import os
-from interactions import slash_command, SlashContext, Client, Intents, listen, File, slash_str_option, OptionType
 from io import BytesIO
 
 import trusetekst
-from trusetekst import TRUSE_PATH
+from views import TrusetextView
 
 HOSTNAME: str = "host.docker.internal"
 
@@ -48,23 +46,23 @@ SERVICE_NAME: dict = {
     JyssesService.JFAGo: "JFA-Go"
 }
 
-bot = Client(intents=Intents.DEFAULT)
+bot = discord.Bot()
 
 
-@listen()
+@bot.event
 async def on_ready() -> None:
     print("Ready")
-    print(f"This bot is owned by {bot.owner}")
+    print(f"{bot.user} is up and running!")
 
 
-@slash_command("server_ip", description="Get the IP-address for the server.")
-async def get_server_ip(ctx: SlashContext) -> None:
+@bot.slash_command(name="server_ip", description="Get the IP-address for the server.")
+async def get_server_ip(ctx: discord.ApplicationContext) -> None:
     ip = requests.get("https://api.ipify.org").content.decode('utf8')
     await ctx.send(f"IP: {ip}")
 
 
-@slash_command("server_status", description="Check status of different Jysses services")
-async def get_server_status(ctx: SlashContext) -> None:
+@bot.slash_command(name="server_status", description="Check status of different Jysses services")
+async def get_server_status(ctx: discord.ApplicationContext) -> None:
     results: dict = {}
     await ctx.defer()
     for k, name in SERVICE_NAME.items():
@@ -77,26 +75,13 @@ async def get_server_status(ctx: SlashContext) -> None:
     await ctx.send(msg)
 
 
-@slash_command("trusetext", description="Trusetekst, du vet.")
-@slash_str_option(
-    name="text",
-    description="Teksten som skal vises"
-)
-async def generate_trusetext(ctx: SlashContext, text: str) -> None:
-    img = trusetekst.get_trusetext(
-        text, trusetekst.fonts["Truckin"], 32, trusetekst.COLORS["red"], trusetekst.V_ALIGN_BOTTOM, trusetekst.H_ALIGN_CENTER
-    )
-    f = None
-
-    img_binary = BytesIO()
-    img.save(img_binary, format="PNG")
-    img_binary.seek(0)
-
-    # with open(TRUSE_PATH, "r") as f:
-    await ctx.send(
-        "", file=File(img_binary, file_name="truse.png")
-    )
-    # f.close()
+@bot.slash_command(name="trusetext", description="Generate trusetext image")
+async def trusetext_image(ctx: discord.ApplicationContext, tekst: discord.Option(str, description="Tekst som skal stå på bildet", required=False)):
+    view = TrusetextView()
+    view.text = tekst if tekst is not None else ""
+    await view.build()
+    await view.generate_image()
+    await ctx.send_response("Hei!", ephemeral=True, file=discord.File(view.img_binary, filename="truse.png"), view=view)
 
 
 def check_port(port: int) -> bool:
@@ -116,5 +101,5 @@ def check_port(port: int) -> bool:
 if __name__ == "__main__":
     TOKEN = os.getenv("DISCORD_TOKEN", "")
     if TOKEN != "":
-        bot.start(TOKEN)
+        bot.run(TOKEN)
 

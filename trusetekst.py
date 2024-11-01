@@ -3,6 +3,7 @@ from typing import Union
 from venv import create
 
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
+from pil_autowrap.pil_autowrap import wrap_text
 
 BASE_PATH: str = os.path.dirname(os.path.realpath(__file__))
 FONT_PATH: str = os.path.join(BASE_PATH, "fonts")
@@ -64,9 +65,10 @@ def add_text(
 
     _, _, w, h = fg_img_draw.textbbox((0, 0), text, font=font_obj, stroke_width=2)
     if img.size[0] < w:
-        factor = img.size[0] / w
-        split_pos = int(len(text) * factor)
-        text = text[:split_pos] + "\n" + text[split_pos:]
+        text = wrap_text(font_obj, text, img.size[0])
+        # factor = img.size[0] / w
+        # split_pos = int(len(text) * factor)
+        # text = text[:split_pos] + "\n" + text[split_pos:]
         _, _, w, h = fg_img_draw.textbbox((0, 0), text, font=font_obj, stroke_width=2)
 
     v_center: float = img.size[1] / 2.0
@@ -120,5 +122,5 @@ def get_trusetext(
 
 if __name__ == "__main__":
     img = create_img()
-    img = add_text(img, "Test tekst her på bildet 123123 dasd ad 123123", v_align=V_ALIGN_BOTTOM, h_align=H_ALIGN_CENTER)
+    img = add_text(img, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pretium placerat gravida. Integer eu pulvinar magna. Aliquam cursus nisl sed malesuada rutrum.", v_align=V_ALIGN_BOTTOM, h_align=H_ALIGN_CENTER)
     img.show()

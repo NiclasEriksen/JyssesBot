@@ -55,7 +55,7 @@ async def on_ready() -> None:
 @bot.slash_command(name="server_ip", description="Get the IP-address for the server.")
 async def get_server_ip(ctx: discord.ApplicationContext) -> None:
     ip = requests.get("https://api.ipify.org").content.decode('utf8')
-    await ctx.send(f"IP: {ip}")
+    await ctx.respond(f"IP: {ip}")
 
 
 @bot.slash_command(name="server_status", description="Check status of different Jysses services")
@@ -69,7 +69,7 @@ async def get_server_status(ctx: discord.ApplicationContext) -> None:
     for k, v in results.items():
         msg += f"{SERVICE_NAME[k]}: {':green_circle:' if v else ':red_circle:'}\n"
 
-    await ctx.send(msg)
+    await ctx.respond(msg)
 
 
 @bot.slash_command(name="trusetext", description="Generate trusetext image")
